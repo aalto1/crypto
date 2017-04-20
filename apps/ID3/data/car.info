@@ -1,0 +1,5 @@
+#Number of Instances: 1728, Number of Attributes: 6, bit-length: 92
+
+# -1 indicates that the last attribute is class attribute
+
+-1,4,4,4,3,3,3,4

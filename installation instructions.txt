@@ -1,0 +1,11 @@
+TUeVIFF
+
+Instructions for Windows install (similar to Linux isntall).
+
+1. Install Python 2.7, e.g., by running https://www.python.org/ftp/python/2.7.13/python-2.7.13.amd64.msi.
+
+2. Install Twisted, e.g., by running (from a Command Prompt): pip install twisted
+
+3. Install gmpy2, e.g., by running (from a Command Prompt): pip install gmpy2
+
+4. Install TUeVIFF by extracting TUeVIFFje.zip and running in the root directory of TUeVIFF (setup.py is in the root): python setup.py install

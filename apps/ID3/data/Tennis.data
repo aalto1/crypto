@@ -1,0 +1,20 @@
+#Outlook Temperature Humidity Wind Play
+#Outlook: Sunny = 0 Overcast = 1 Rain = 2
+#Temperature: Hot = 0 Mild = 1 Cool = 2
+#Humidity: High = 0 Normal = 1
+#Wind: Strong = 0 Weak = 1
+#Play: Y = 0 N = 1
+0,0,0,1,1
+0,0,0,0,1
+1,0,0,1,0
+2,1,0,1,0
+2,2,1,1,0
+2,2,1,0,1
+1,2,1,0,0
+0,1,0,1,1
+0,2,1,1,0
+2,1,1,1,0
+0,1,1,0,0
+1,1,0,0,0
+1,0,1,1,0
+2,1,0,0,1
