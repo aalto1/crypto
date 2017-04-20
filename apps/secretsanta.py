@@ -10,6 +10,7 @@ from optparse import OptionParser
 parser = OptionParser()
 Runtime.add_options(parser)
 options, args = parser.parse_args()
+print options
 if len(args) == 0:
     parser.error("You must specify a config file.")
 else:
@@ -17,7 +18,9 @@ else:
 
 @viffinlinecb
 def main(runtime):
-    print(dir(runtime))
+    print "################\n"
+    print(type(runtime))
+    print "################\n"
     global tv, Zp
     tv = runtime
     k = tv.options.security_parameter
