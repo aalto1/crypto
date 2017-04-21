@@ -31,15 +31,24 @@ def main(runtime):
     print "Galois"
     print Zp(0)
     yield declareReturn(tv, Zp)
-    for n in xrange(10,11):
-        #a = random_derangement(n)
+    for n in xrange(10,12):
+        a = random_derangement(n)
         #a = random_unit_vector(n)
         print("############################## STEP", n ,"\n")
-        a = random_permutation(n)
+        #a = random_permutation(n)
         a = yield map(tv.open, a)
         #print "finito!"
         print map(lambda v:int(v.value), a) #time/object - this is the function that prints the values on the terminal
     tv.shutdown()
+
+def superPrint(announcement, b = None, x= None, y=None, extra=None):
+    return
+    print(announcement)
+    print("B-VALUE:", b)
+    print("X-VALUE:", x)
+    print("Y-VALUE:", y)
+    print("EXTRA:", extra)
+
     
 @viffinlinecb
 def random_unit_vector(n):
@@ -50,25 +59,16 @@ def random_unit_vector(n):
     ##############################
     if n%2==0:
         y = tv.scalar_mul(b, x) # scalar-vector product b_scalar, x_vector
-        print("######EVEN - RECURSION DEPTH", n, )#y + map(operator.sub, x, y))
-        print("B-VALUE:", b)
-        print("X-VALUE:", x)
-        print("Y-VALUE:", y)
-        print("SUB-VALUE:", map(operator.sub, x, y))
+        superPrint(["######EVEN - RECURSION DEPTH",n], b, x, y, ["SUB-VALUE:",  map(operator.sub, x, y)])
         returnValue(y + map(operator.sub, x, y)) #with list the + symbol is concat
     ##############################
     elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0
-        print("######AGAIN - RECURSION DEPTH", n, tv.equal_zero_public(b * x[0] - 1))
+        superPrint(["######AGAIN - RECURSION DEPTH", n], tv.equal_zero_public(b * x[0] - 1))
         returnValue(random_unit_vector(n))
     ##############################
     else:
         y = tv.scalar_mul(b, x[1:]) # scalar-vector product b_scalar, x_vector
-        print("######OTHER - RECURSION DEPTH", n)
-        print("B-VALUE:", b)
-        print("X-VALUE:", x)
-        print("Y-VALUE:", y)
-        print("LENGTH:", len(y), len(map(operator.sub, x[1:], y)), len(x[:1]), len(y + map(operator.sub, x[1:], y) + x[:1]))
-        #,y + map(operator.sub, x[1:], y) + x[:1])
+        superPrint(["######OTHER - RECURSION DEPTH", n], b, x, y, ["LENGTH:", len(y), len(map(operator.sub, x[1:], y)), len(x[:1]), len(y + map(operator.sub, x[1:], y) + x[:1])])
         returnValue(y + map(operator.sub, x[1:], y) + x[:1])
     
 def random_permutation(n):
@@ -78,7 +78,7 @@ def random_permutation(n):
         x = random_unit_vector(n-i)
         a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element
         #print("pupazzo", a_x)
-        d = tv.scalar_mul(a[i] - a_x, x) #vector
+        d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti
         a[i] = a_x
         for j in xrange(n-i):
             a[i+j] += d[j]
@@ -90,6 +90,7 @@ def random_derangement(n):
     a = random_permutation(n)
     t = tv.prod([a[i]-i for i in xrange(n)])
     if (yield tv.equal_zero_public(t)): #if self-loop get another derangement
+        print"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         returnValue(random_derangement(n))
     else:
         returnValue(a)
