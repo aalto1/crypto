@@ -31,8 +31,8 @@ def main(runtime):
     print "Galois"
     print Zp(0)
     yield declareReturn(tv, Zp)
-    for n in xrange(10,12):
-        a = random_derangement(n)
+    for n in xrange(10,11):
+        a = random_derangement_2(n)
         #a = random_unit_vector(n)
         print("############################## STEP", n ,"\n")
         #a = random_permutation(n)
@@ -58,18 +58,18 @@ def random_unit_vector(n):
     x = random_unit_vector((n+1)/2)
     ##############################
     if n%2==0:
-        y = tv.scalar_mul(b, x) # scalar-vector product b_scalar, x_vector
+        y = tv.scalar_mul(b, x) # scalar-vector product b_scalar, x_vector --       N SHAMIR SHARING
         superPrint(["######EVEN - RECURSION DEPTH",n], b, x, y, ["SUB-VALUE:",  map(operator.sub, x, y)])
-        returnValue(y + map(operator.sub, x, y)) #with list the + symbol is concat
+        returnValue(y + map(operator.sub, x, y)) #with list the + symbol is concat  0 SHARMIR
     ##############################
-    elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0
+    elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0   1 OPENING
         superPrint(["######AGAIN - RECURSION DEPTH", n], tv.equal_zero_public(b * x[0] - 1))
         returnValue(random_unit_vector(n))
     ##############################
     else:
-        y = tv.scalar_mul(b, x[1:]) # scalar-vector product b_scalar, x_vector
+        y = tv.scalar_mul(b, x[1:]) # scalar-vector product b_scalar, x_vector --   N SHAMIR SHARING
         superPrint(["######OTHER - RECURSION DEPTH", n], b, x, y, ["LENGTH:", len(y), len(map(operator.sub, x[1:], y)), len(x[:1]), len(y + map(operator.sub, x[1:], y) + x[:1])])
-        returnValue(y + map(operator.sub, x[1:], y) + x[:1])
+        returnValue(y + map(operator.sub, x[1:], y) + x[:1]) #                      0 SHAMIR
     
 def random_permutation(n):
     a = [Share(tv, Zp, Zp(i)) for i in xrange(n)]
@@ -77,17 +77,21 @@ def random_permutation(n):
     for i in xrange(n-1):
         x = random_unit_vector(n-i)
         a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element
-        #print("pupazzo", a_x)
-        d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti
+        #print("pupazzo", a_x, i-n)
+        d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti + sparse array
+        print("D-VECTOR:", a[i], a_x, a[i] - a_x)
         a[i] = a_x
-        for j in xrange(n-i):
+        for j in xrange(n-i): #length of the random vector + starts to add to the non fixed ones
             a[i+j] += d[j]
+        print("TEMPORARY VECTOR:", a)
     return a
     
 @viffinlinecb
 def random_derangement(n):
+    #basic derangement, not strictly related to an actual array -> jasper
     yield declareReturn(tv, Zp, n)
     a = random_permutation(n)
+    #print("WASNIO", int(str(a[0].result)[1]))
     t = tv.prod([a[i]-i for i in xrange(n)])
     if (yield tv.equal_zero_public(t)): #if self-loop get another derangement
         print"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -99,7 +103,8 @@ def random_derangement(n):
 def random_derangement_2(n):
     yield declareReturn(tv, Zp, n)
     a = random_permutation(n)
-    t = tv.prod([a[i]-i for i in xrange(n)])
+    t = tv.prod([a[i]-i if a[int(str(a[0].result)[1:-1])]!=i else 0 for i in xrange(n)]) #check equal in passive - check OBLIVIOUS AND CORRECT
+    print("test", a)
     if (yield tv.equal_zero_public(t)):
         returnValue(random_derangement(n))
     else:
