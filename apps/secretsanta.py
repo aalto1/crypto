@@ -10,16 +10,17 @@ from optparse import OptionParser
 parser = OptionParser()
 Runtime.add_options(parser)
 options, args = parser.parse_args()
-print options
+print options,args
 if len(args) == 0:
     parser.error("You must specify a config file.")
 else:
     id, players = load_config(args[0])
+    print id, players
 
 @viffinlinecb
 def main(runtime):
     print "################\n"
-    print(type(runtime))
+    print(dir(runtime))
     print "################\n"
     global tv, Zp
     tv = runtime
@@ -27,18 +28,26 @@ def main(runtime):
     l = tv.options.bit_length
     ln = len(tv.players).bit_length()
     Zp = GF(find_prime(2**(l + k + ln + 1), blum=True))
+    print "Galois"
+    print Zp(0)
     yield declareReturn(tv, Zp)
-    for n in xrange(2,10):
-        a = random_derangement(n)
+    for n in xrange(1,3):
+        #a = random_derangement(n)
+        a = random_unit_vector(n)
+        print a
+        #a = random_permutation(n)
         a = yield map(tv.open, a)
-        print map(lambda v:int(v.value), a)
+        #print "finito!"
+        print map(lambda v:int(v.value), a) #time/object - this is the function that prints the values on the terminal
     tv.shutdown()
     
 @viffinlinecb
 def random_unit_vector(n):
     yield declareReturn(tv, Zp, n)
-    if n==1: returnValue([Zp(1)])
+    if n==1: returnValue([Zp(1)]) #base step
+    print "ciao"
     b = tv.random_bit(Zp)
+    print str(b) + "questo e' b"
     x = random_unit_vector((n+1)/2)
     if n%2==0:
         y = tv.scalar_mul(b, x)
@@ -70,5 +79,17 @@ def random_derangement(n):
     else:
         returnValue(a)
 
+@viffinlinecb
+def random_derangement_2(n):
+    yield declareReturn(tv, Zp, n)
+    a = random_permutation(n)
+    t = tv.prod([a[i]-i for i in xrange(n)])
+    if (yield tv.equal_zero_public(t)):
+        returnValue(random_derangement(n))
+    else:
+        returnValue(a)
+
 
 start(main, id, players, options)
+
+
