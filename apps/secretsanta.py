@@ -75,7 +75,7 @@ def random_permutation(n):
     a = [Share(tv, Zp, Zp(i)) for i in xrange(n)]
     print("SHARE LIST", a)
     for i in xrange(n-1):
-        x = random_unit_vector(n-i)
+        x = random_unit_vector(n-i) #                                                                           # nlogn
         a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element    # 1 share(?)
         #print("pupazzo", a_x, i-n)
         d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti + sparse array                          # n share
