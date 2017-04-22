@@ -54,7 +54,7 @@ def superPrint(announcement, b = None, x= None, y=None, extra=None):
 def random_unit_vector(n):
     yield declareReturn(tv, Zp, n)
     if n==1: returnValue([Zp(1)]) #base step
-    b = tv.random_bit(Zp)
+    b = tv.random_bit(Zp) #                                                         1 SHARE
     x = random_unit_vector((n+1)/2)
     ##############################
     if n%2==0:
@@ -62,7 +62,7 @@ def random_unit_vector(n):
         superPrint(["######EVEN - RECURSION DEPTH",n], b, x, y, ["SUB-VALUE:",  map(operator.sub, x, y)])
         returnValue(y + map(operator.sub, x, y)) #with list the + symbol is concat  0 SHARMIR
     ##############################
-    elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0   1 OPENING
+    elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0   1 OPENING - if B PALAYERS B SHARINGS
         superPrint(["######AGAIN - RECURSION DEPTH", n], tv.equal_zero_public(b * x[0] - 1))
         returnValue(random_unit_vector(n))
     ##############################
@@ -76,13 +76,13 @@ def random_permutation(n):
     print("SHARE LIST", a)
     for i in xrange(n-1):
         x = random_unit_vector(n-i)
-        a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element
+        a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element    # 1 share(?)
         #print("pupazzo", a_x, i-n)
-        d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti + sparse array
+        d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti + sparse array                          # n share
         print("D-VECTOR:", a[i], a_x, a[i] - a_x)
         a[i] = a_x
         for j in xrange(n-i): #length of the random vector + starts to add to the non fixed ones
-            a[i+j] += d[j]
+            a[i+j] += d[j]                                                                                      # zero shares
         print("TEMPORARY VECTOR:", a)
     return a
     
@@ -95,7 +95,7 @@ def random_derangement(n):
     t = tv.prod([a[i]-i for i in xrange(n)])
     if (yield tv.equal_zero_public(t)): #if self-loop get another derangement
         print"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-        returnValue(random_derangement(n))
+        returnValue(random_derangement(n))                                                                      # expected value(?)
     else:
         returnValue(a)
 
@@ -103,7 +103,7 @@ def random_derangement(n):
 def random_derangement_2(n):
     yield declareReturn(tv, Zp, n)
     a = random_permutation(n)
-    t = tv.prod([a[i]-i if a[int(str(a[0].result)[1:-1])]!=i else 0 for i in xrange(n)]) #check equal in passive - check OBLIVIOUS AND CORRECT
+    t = tv.prod([a[i]-i if a[int(str(a[0].result)[1:-1])]-i else 0 for i in xrange(n)]) #check equal in passive - check OBLIVIOUS AND CORRECT
     print("test", a)
     if (yield tv.equal_zero_public(t)):
         returnValue(random_derangement(n))
