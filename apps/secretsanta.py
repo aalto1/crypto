@@ -103,7 +103,18 @@ def random_derangement(n):
 def random_derangement_2(n):
     yield declareReturn(tv, Zp, n)
     a = random_permutation(n)
-    t = tv.prod([a[i]-i if a[int(str(a[0].result)[1:-1])]-i else 0 for i in xrange(n)]) #check equal in passive - check OBLIVIOUS AND CORRECT
+    t = tv.prod([a[i]-i if a[int(str(a[0].result)[1:-1])]-i else 0 for i in xrange(n)]) #check equal in passive - check CORRECT
+    print("test", a)
+    if (yield tv.equal_zero_public(t)):
+        returnValue(random_derangement(n))
+    else:
+        returnValue(a)
+
+@viffinlinecb
+def random_derangement_3(n):
+    yield declareReturn(tv, Zp, n)
+    a = random_permutation(n)
+    t = tv.prod([a[i]-i if a[a[i]]-i else 0 for i in xrange(n)]) #check equal in passive - check OBLIVIOUS AND CORRECT
     print("test", a)
     if (yield tv.equal_zero_public(t)):
         returnValue(random_derangement(n))
