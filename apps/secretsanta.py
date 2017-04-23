@@ -125,7 +125,7 @@ def random_derangement_3(n):
     good_derangements = get_no_two_cycle_derangements(n)
     print("Type:", type(good_derangements))
     for good_derangement in good_derangements:
-        if( yield tv.prod([a[i] - good_derangement[i] for i in range(n)])):         #!n n logn n
+        if(yield 1-tv.sum([a[i] - good_derangement[i] for i in range(n)])):         #!n
             print"FINE"
             returnValue(a)
     print"hola"
