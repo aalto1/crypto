@@ -119,7 +119,7 @@ class PassiveRuntime(Runtime):
         r = self.random(field)
         a, r = yield a, r
         field = type(a)
-        c = yield self.open(Share(self, field, a * r), None, 2*self.threshold)
+        c = yield self.open(Share(self, field, a * r), None, 2*self.threshold)  #this opens the share
         returnValue(c == 0)
         
     @viffinlinecb

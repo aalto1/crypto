@@ -18,10 +18,10 @@ print my_get_text("John")
 
 def approxLog(x):
     if x <= 2:
-        print 1
-        return 0
-    print x
-    return 1 + approxLog((x+1)/2)
+        #print 1
+        return []
+    #print x
+    return [x] + approxLog((x+1)/2)
 
 def logga(b, n ):
     if n <= b:
@@ -34,7 +34,25 @@ def logga(b, n ):
 
 
 
-y =  21166
-print("Approx:",approxLog(y))
-print("logga", logga(2, y))
+#y = 328382322427425755434242323255252323232
+
+totEven = 0
+
+for y in xrange(3, 3283823224274257554):
+    even = 0
+    odd = 0
+    result = approxLog(y)
+    for n in result:
+        if(n%2==0):
+            even +=1
+        else:
+            odd +=1
+    d = len(result)
+    #print(d, "even:" + str(even), "odd:" + str(odd), "even:" + str(1.0*even/d), "odd:" + str(1.0*odd/d))
+    totEven += 1.0*even/d
+    print("Even coefficient:", totEven/y, y)
+
+
+
+    #print("logga", logga(2, y))
 print math.log(y,2)

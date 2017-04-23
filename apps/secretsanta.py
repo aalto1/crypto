@@ -67,7 +67,7 @@ def random_unit_vector(n):
     ##############################
     elif (yield tv.equal_zero_public(b * x[0] - 1)): #a==0 just if b=0 and x[0]=0   1 OPENING - if B PALAYERS B SHARINGS
         superPrint(["######AGAIN - RECURSION DEPTH", n], tv.equal_zero_public(b * x[0] - 1))
-        returnValue(random_unit_vector(n))
+        returnValue(random_unit_vector(n))                                          #rinizia da  capo
     ##############################
     else:
         y = tv.scalar_mul(b, x[1:]) # scalar-vector product b_scalar, x_vector --   N SHAMIR SHARING
@@ -78,8 +78,8 @@ def random_permutation(n):
     a = [Share(tv, Zp, Zp(i)) for i in xrange(n)]
     #print("SHARE LIST", a)
     for i in xrange(n-1):
-        x = random_unit_vector(n-i) #                                                                           # nlogn
-        a_x = tv.in_prod(a[i-n:], x) # VECTOR PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element    # 1 share(?)
+        x = random_unit_vector(n-i) #                                                                           # 3/4 nlogn
+        a_x = tv.in_prod(a[i-n:], x) # dot PRODUCT - VECTOR HAS THE SAME LENGTH - randomly select element    # 1 share(?)
         #print("pupazzo", a_x, i-n)
         d = tv.scalar_mul(a[i] - a_x, x) #vector + (previous-now)*tutti + sparse array                          # n share
         #print("D-VECTOR:", a[i], a_x, a[i] - a_x)
@@ -95,8 +95,8 @@ def random_derangement(n):
     yield declareReturn(tv, Zp, n)
     a = random_permutation(n)
     #print("WASNIO", int(str(a[0].result)[1]))
-    t = tv.prod([a[i]-i for i in xrange(n)])
-    if (yield tv.equal_zero_public(t)): #if self-loop get another derangement
+    t = tv.prod([a[i]-i for i in xrange(n)])                                                                    #
+    if (yield tv.equal_zero_public(t)): #if self-loop get another derangement                                   #
         print"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
         returnValue(random_derangement(n))                                                                      # expected value(?)
     else:
@@ -133,7 +133,7 @@ def random_derangement_3(n):
 
 
 def get_no_two_cycle_derangements(n):
-    no_two_cycle_derangements = [list(perm) for perm in itertools.permutations(range(n)) if all((perm[p] != indx & indx!=p) for indx, p in enumerate(perm)) ]
+    no_two_cycle_derangements = [list(perm) for perm in itertools.permutations(range(n)) if all((perm[p] != indx & indx != p) for indx, p in enumerate(perm)) ]
     random.shuffle(no_two_cycle_derangements)
     print("NUMBER OF NO 2-CYCLE DERANGEMENT:", len(no_two_cycle_derangements))
     return no_two_cycle_derangements
